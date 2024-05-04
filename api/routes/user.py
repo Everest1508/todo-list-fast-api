@@ -24,7 +24,6 @@ async def login_user(user_data: UserLogin):
     user_obj = await User.filter(email=user_data.email).first()
     if not user_obj:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    print(user_obj.password_hash)
     if not bcrypt.checkpw(user_data.password.encode('utf-8'), user_obj.password_hash[2:-1].encode('utf-8')):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password")
     token = create_access_token({"sub": user_obj.email})
